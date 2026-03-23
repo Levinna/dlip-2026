@@ -8,11 +8,11 @@ Instructor: Kihyun Na (Research Professor)
 
 This course covers the fundamentals and recent advances in deep learning for image processing. Topics range from CNNs and Transformers to foundation models, diffusion models, vision-language models, and embodied AI.
 
-**Course Website:** [https://USERNAME.github.io/dlip-2026](https://USERNAME.github.io/dlip-2026)
+**Course Website:** [https://levinna.github.io/dlip-2026](https://levinna.github.io/dlip-2026)
 
 ## Structure
 
-- **Weeks 1–7:** Foundational lectures (CNN, RNN, Transformer, ViT, Detection/Segmentation, SSL)
+- **Weeks 1–7:** Foundational lectures (CNN, Sequence Modeling, Transformer, Transformer in Vision, Detection/Segmentation, SSL)
 - **Week 8:** Review literacy and paper presentation roles
 - **Weeks 9–15:** Topic lectures + student-led paper presentations
 - **Week 16:** Miniconference (final project presentations)
