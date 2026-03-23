@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Learning for Image Processing — Spring 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a3a5c;
+            --accent: #2c7be5;
+            --text: #2d3748;
+            --text-light: #718096;
+            --bg: #ffffff;
+            --bg-alt: #f7fafc;
+            --border: #e2e8f0;
+            --max-width: 900px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Sans 3', -apple-system, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        .header-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .header h1 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            letter-spacing: -0.01em;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .header .course-code {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            letter-spacing: 0.05em;
+        }
+
+        /* Nav */
+        .nav {
+            background: var(--bg-alt);
+            border-bottom: 1px solid var(--border);
+            padding: 0.8rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.2rem 0;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .nav a:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* Main */
+        .main {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        section { margin-bottom: 3rem; }
+
+        h2 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        p { margin-bottom: 1rem; }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* Info grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 0.4rem 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .info-grid dt {
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .info-grid dd { color: var(--text); }
+
+        /* Schedule table */
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .schedule-table thead {
+            background: var(--primary);
+            color: white;
+        }
+
+        .schedule-table th {
+            padding: 0.7rem 0.8rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .schedule-table td {
+            padding: 0.6rem 0.8rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .schedule-table tbody tr:hover {
+            background: var(--bg-alt);
+        }
+
+        .schedule-table .week-num {
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        .schedule-table .topic {
+            font-weight: 600;
+        }
+
+        .schedule-table .materials a {
+            display: inline-block;
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            padding: 0.15rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-right: 0.3rem;
+            margin-bottom: 0.2rem;
+            transition: all 0.15s;
+        }
+
+        .schedule-table .materials a:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Phase labels */
+        .phase {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.1rem 0.4rem;
+            border-radius: 2px;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .phase-lecture {
+            background: #ebf5ff;
+            color: #2c7be5;
+        }
+
+        .phase-seminar {
+            background: #fef3e2;
+            color: #c87519;
+        }
+
+        .phase-conference {
+            background: #e6f9ee;
+            color: #1a9d5c;
+        }
+
+        /* Roles section */
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .role-card {
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.8rem;
+        }
+
+        .role-card h4 {
+            font-size: 0.85rem;
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .role-card p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 0;
+            line-height: 1.4;
+        }
+
+        /* Acknowledgements */
+        .ack-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .ack-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .ack-list li:last-child { border-bottom: none; }
+
+        .ack-list .course-name { font-weight: 600; }
+        .ack-list .course-detail { color: var(--text-light); font-size: 0.85rem; }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.5rem; }
+            .nav-inner { gap: 1rem; }
+            .info-grid { grid-template-columns: 1fr; }
+            .schedule-table { font-size: 0.8rem; }
+            .roles-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-inner">
+        <div class="course-code">ECEA0649 / ECE40049</div>
+        <h1>Deep Learning for Image Processing</h1>
+        <div class="subtitle">Handong Global University — Spring 2026</div>
+    </div>
+</div>
+
+<nav class="nav">
+    <div class="nav-inner">
+        <a href="#about">About</a>
+        <a href="#schedule">Schedule</a>
+        <a href="#papers">Paper Sessions</a>
+        <a href="#challenge">Challenge & Project</a>
+        <a href="#acknowledgements">Acknowledgements</a>
+    </div>
+</nav>
+
+<div class="main">
+
+    <!-- About -->
+    <section id="about">
+        <h2>About</h2>
+        <p>
+            This course covers the fundamentals and recent advances in deep learning for image processing.
+            The first half builds foundational knowledge (CNNs, RNNs, Transformers, ViT, detection/segmentation, self-supervised learning),
+            while the second half explores modern topics (foundation models, diffusion, vision-language models, video understanding, embodied AI)
+            through lectures and student-led paper presentations.
+        </p>
+
+        <dl class="info-grid">
+            <dt>Instructor</dt>
+            <dd>Kihyun Na (Research Professor)</dd>
+            <dt>Affiliation</dt>
+            <dd>BK21 AI Project Group & Institute for ICT, Handong Global University</dd>
+            <dt>Schedule</dt>
+            <dd>Spring 2026, Weekly</dd>
+            <dt>Format</dt>
+            <dd>Lecture (Wk 1–7) → Lecture + Paper Seminar (Wk 9–15) → Miniconference (Wk 16)</dd>
+            <dt>Prerequisites</dt>
+            <dd>Basic deep learning fundamentals, Python/PyTorch</dd>
+            <dt>LMS</dt>
+            <dd><a href="https://lms.handong.edu/courses/21714" target="_blank">Handong LMS (enrolled students)</a></dd>
+        </dl>
+    </section>
+
+    <!-- Schedule -->
+    <section id="schedule">
+        <h2>Schedule</h2>
+        <p>
+            Slides will be posted after each lecture. The schedule may be adjusted as the semester progresses.
+        </p>
+
+        <table class="schedule-table">
+            <thead>
+                <tr>
+                    <th>Wk</th>
+                    <th>Topic</th>
+                    <th>Materials</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="week-num">1</td>
+                    <td>
+                        <span class="topic">OT + Introduction</span>
+                        <span class="phase phase-lecture">Lecture</span>
+                    </td>
+                    <td class="materials">
+                        <a href="slides/DL_ImageProcessing_Week1.pdf">slides</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="week-num">2</td>
+                    <td>
+                        <span class="topic">DL Fundamentals Review</span>
+                        <span class="phase phase-lecture">Lecture</span>
+                    </td>
+                    <td class="materials">
+                        <a href="slides/DL_ImageProcessing_Week2_v2.pdf">slides</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="week-num">3</td>
+                    <td>
+                        <span class="topic">Convolutional Neural Networks</span>
+                        <span class="phase phase-lecture">Lecture</span>
+                    </td>
+                    <td class="materials">
+                        <a href="slides/DL_ImageProcessing_Week3_v2.pdf">slides</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="week-num">4</td>
+                    <td>
+                        <span class="topic">RNN + Attention Mechanism</span>
+                        <span class="phase phase-lecture">Lecture</span>
+                    </td>
+                    <td class="materials"></td>
+                </tr>
+                <tr>
+                    <td class="week-num">5</td>
+                    <td>
+                        <span class="topic">Transformer + ViT</span>
+                        <span class="phase phase-lecture">Lecture</span>
+                    </td>
+                    <td class="materials"></td>
+                </tr>
+                <tr>
+                    <td class="week-num">6</td>
+                    <td>
+                        <span class="topic">Detection + Segmentation</span>
+                        <span class="phase phase-lecture">Lecture</span>
+                    </td>
+                    <td class="materials"></td>
+                </tr>
+                <tr>
+                    <td class="week-num">7</td>
+                    <td>
+                        <span class="topic">Self-Supervised Learning</span>
+                        <span class="phase phase-lecture">Lecture</span>
+                    </td>
+                    <td class="materials"></td>
+                </tr>
+                <tr>
+                    <td class="week-num">8</td>
+                    <td>
+                        <span class="topic">Review Literacy + Role Explanation</span>
+                        <span class="phase phase-lecture">Lecture</span>
+                    </td>
+                    <td class="materials"></td>
+                </tr>
+                <tr>
+                    <td class="week-num">9</td>
+                    <td>
+                        <span class="topic">Foundation Models (CLIP, SAM)</span>
+                        <span class="phase phase-seminar">Lecture + Paper #1</span>
+                    </td>
+                    <td class="materials"></td>
+                </tr>
+                <tr>
+                    <td class="week-num">10</td>
+                    <td>
+                        <span class="topic">Diffusion Models</span>
+                        <span class="phase phase-seminar">Lecture + Paper #2</span>
+                    </td>
+                    <td class="materials"></td>
+                </tr>
+                <tr>
+                    <td class="week-num">11</td>
+                    <td>
+                        <span class="topic">Conditional Generation</span>
+                        <span class="phase phase-seminar">Lecture + Paper #3</span>
+                    </td>
+                    <td class="materials"></td>
+                </tr>
+                <tr>
+                    <td class="week-num">12</td>
+                    <td>
+                        <span class="topic">Vision-Language Models</span>
+                        <span class="phase phase-seminar">Lecture + Paper #4</span>
+                    </td>
+                    <td class="materials"></td>
+                </tr>
+                <tr>
+                    <td class="week-num">13</td>
+                    <td>
+                        <span class="topic">VLM Applications</span>
+                        <span class="phase phase-seminar">Lecture + Paper #5</span>
+                    </td>
+                    <td class="materials"></td>
+                </tr>
+                <tr>
+                    <td class="week-num">14</td>
+                    <td>
+                        <span class="topic">Video Understanding</span>
+                        <span class="phase phase-seminar">Lecture + Paper #6</span>
+                    </td>
+                    <td class="materials"></td>
+                </tr>
+                <tr>
+                    <td class="week-num">15</td>
+                    <td>
+                        <span class="topic">Embodied AI & Robot Vision</span>
+                        <span class="phase phase-seminar">Lecture + Paper #7</span>
+                    </td>
+                    <td class="materials"></td>
+                </tr>
+                <tr>
+                    <td class="week-num">16</td>
+                    <td>
+                        <span class="topic">Miniconference (Final Project Presentations)</span>
+                        <span class="phase phase-conference">Conference</span>
+                    </td>
+                    <td class="materials"></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Paper Sessions -->
+    <section id="papers">
+        <h2>Paper Presentation Sessions</h2>
+        <p>
+            Starting from Week 9, each class includes a student-led paper presentation session (~80 min).
+            Students rotate through all roles over the 7-week seminar period.
+        </p>
+
+        <div class="roles-grid">
+            <div class="role-card">
+                <h4>Author</h4>
+                <p>Present the paper + rebuttal</p>
+            </div>
+            <div class="role-card">
+                <h4>Area Chair</h4>
+                <p>Synthesize reviews, accept/reject decision</p>
+            </div>
+            <div class="role-card">
+                <h4>Reviewer ×2</h4>
+                <p>Submit written review (Pro & Con)</p>
+            </div>
+            <div class="role-card">
+                <h4>Archaeologist</h4>
+                <p>Prior work context briefing</p>
+            </div>
+            <div class="role-card">
+                <h4>Future Researcher</h4>
+                <p>Limitations + follow-up ideas</p>
+            </div>
+            <div class="role-card">
+                <h4>Reproducibility Engineer</h4>
+                <p>Code availability, hyperparameters, re-implementation assessment</p>
+            </div>
+        </div>
+
+        <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-light);">
+            Paper presentation format inspired by
+            <a href="https://colinraffel.com/blog/role-playing-seminar.html" target="_blank">Raffel & Jacobson's role-playing seminar model</a>.
+        </p>
+    </section>
+
+    <!-- Challenge & Project -->
+    <section id="challenge">
+        <h2>Challenge & Final Project</h2>
+
+        <p>
+            Students participate in ML/CV challenges as teams throughout the semester.
+            The final project (30%) takes the form of a technical report or blog post based on challenge results or independent research.
+            Teams present their work at the Week 16 miniconference.
+        </p>
+
+        <dl class="info-grid">
+            <dt>Team Formation</dt>
+            <dd>Self-organized, multiple team participation allowed</dd>
+            <dt>Deliverable</dt>
+            <dd>Written report with Author Contributions section</dd>
+            <dt>Presentation</dt>
+            <dd>Week 16 Miniconference (team-based)</dd>
+        </dl>
+    </section>
+
+    <!-- Acknowledgements -->
+    <section id="acknowledgements">
+        <h2>Acknowledgements</h2>
+        <p>
+            Course materials draw inspiration from the following open resources.
+            We gratefully acknowledge the instructors for making their materials available.
+        </p>
+
+        <ul class="ack-list">
+            <li>
+                <span class="course-name">Stanford CS231n: Deep Learning for Computer Vision</span><br>
+                <span class="course-detail">Fei-Fei Li, Ehsan Adeli, et al. —
+                    <a href="https://cs231n.stanford.edu" target="_blank">cs231n.stanford.edu</a>
+                </span>
+            </li>
+            <li>
+                <span class="course-name">UMich EECS 498/598: Deep Learning for Computer Vision</span><br>
+                <span class="course-detail">Justin Johnson —
+                    <a href="https://web.eecs.umich.edu/~justincj/teaching/eecs498/WI2022/" target="_blank">web.eecs.umich.edu/~justincj</a>
+                </span>
+            </li>
+            <li>
+                <span class="course-name">MIT 6.8300: Advances in Computer Vision</span><br>
+                <span class="course-detail">Vincent Sitzmann —
+                    <a href="https://scenerepresentations.org/courses/2025/spring/advances-in-cv/" target="_blank">scenerepresentations.org</a>
+                </span>
+            </li>
+            <li>
+                <span class="course-name">MIT 6.7960: Deep Learning</span><br>
+                <span class="course-detail">Phillip Isola, Sara Beery, Jeremy Bernstein —
+                    <a href="https://ocw.mit.edu/courses/6-7960-deep-learning-fall-2024/" target="_blank">MIT OCW</a>
+                </span>
+            </li>
+            <li>
+                <span class="course-name">CMU 16-824: Visual Learning and Recognition</span><br>
+                <span class="course-detail">Jun-Yan Zhu —
+                    <a href="https://visual-learning.cs.cmu.edu" target="_blank">visual-learning.cs.cmu.edu</a>
+                </span>
+            </li>
+        </ul>
+    </section>
+
+</div>
+
+<div class="footer">
+    &copy; 2026 Kihyun Na, Handong Global University. Course materials are provided for educational purposes.
+</div>
+
+</body>
+</html>
