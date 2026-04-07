@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 5 Notes — Transformer in Vision</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a3a5c;
+            --accent: #2c7be5;
+            --text: #2d3748;
+            --text-light: #718096;
+            --bg: #ffffff;
+            --bg-alt: #f7fafc;
+            --border: #e2e8f0;
+            --max-width: 900px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Sans 3', -apple-system, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem 2rem;
+        }
+
+        .header-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .header .back {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .header .back:hover { color: white; }
+
+        .header h1 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+
+        .header .subtitle {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            margin-top: 0.3rem;
+        }
+
+        .main {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h2 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1.35rem;
+            color: var(--primary);
+            margin-top: 2.5rem;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            font-size: 1.05rem;
+            color: var(--primary);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p { margin-bottom: 1rem; }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .qa-block {
+            background: var(--bg-alt);
+            border-left: 3px solid var(--accent);
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.2rem;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .qa-block .question {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .qa-block .answer {
+            color: var(--text);
+        }
+
+        .qa-block .answer p:last-child { margin-bottom: 0; }
+
+        .supplement-block {
+            background: #fef3e2;
+            border-left: 3px solid #c87519;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.2rem;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .supplement-block .label {
+            font-weight: 700;
+            color: #c87519;
+            margin-bottom: 0.5rem;
+        }
+
+        .supplement-block p:last-child { margin-bottom: 0; }
+
+        .reading-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .reading-list li {
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+
+        .reading-list li:last-child { border-bottom: none; }
+
+        .reading-tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            padding: 0.1rem 0.4rem;
+            border-radius: 2px;
+            margin-right: 0.4rem;
+            vertical-align: middle;
+        }
+
+        .tag-paper {
+            background: #ebf5ff;
+            color: #2c7be5;
+        }
+
+        .tag-notes {
+            background: #e6f9ee;
+            color: #1a9d5c;
+        }
+
+        .tag-video {
+            background: #fef3e2;
+            color: #c87519;
+        }
+
+        .tag-blog {
+            background: #f0e6f6;
+            color: #7c3aed;
+        }
+
+        code {
+            background: var(--bg-alt);
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-inner">
+        <a class="back" href="index.html">← Back to Course</a>
+        <h1>Week 5: Transformer in Vision</h1>
+        <div class="subtitle">Lecture Notes, Q&A, and Further Reading</div>
+    </div>
+</div>
+
+<div class="main">
+
+    <!-- Lecture Overview -->
+    <h2>Lecture Overview</h2>
+    <p>
+        This lecture covers how the Transformer architecture has been adapted for vision tasks: Vision Transformer (ViT), DeiT, Swin Transformer, and modern design choices including activation functions, positional encodings, and token design.
+    </p>
+
+    <!-- Supplementary Note -->
+    <h2>Supplementary Notes</h2>
+
+    <h3>SwiGLU in Vision Transformers</h3>
+
+    <div class="supplement-block">
+        <div class="label">Supplement: Why GELU over SwiGLU for ViT</div>
+        <p>
+            SwiGLU works well in NLP Transformers (e.g., LLaMA), but in Vision Transformers it can cause an <strong>over-gating problem</strong>: the gating mechanism filters out too much information, aggressively suppressing activations. This is related to interactions with LayerScale (a per-channel learnable scaling applied after each residual block) — when combined with SwiGLU's gating, the effective signal can be overly attenuated.
+        </p>
+        <p>
+            For this reason, GELU remains the recommended activation for Vision Transformers. The over-gating issue is an active area of investigation.
+        </p>
+    </div>
+
+    <!-- Q&A from Lecture -->
+    <h2>Q&A from Lecture</h2>
+
+    <h3>1. Is [CLS] Token Sufficient for Global Representation?</h3>
+
+    <div class="qa-block">
+        <div class="question">Q: Can a single [CLS] token capture enough global information for downstream tasks?</div>
+        <div class="answer">
+            <p>
+                <strong>For classification: yes.</strong> Image classification compresses the entire image into a single label, so one global feature vector is sufficient. [CLS] and GAP perform similarly for this task. The more practical concern, as discussed in lecture, is the alignment problem between [CLS] and patch tokens during training.
+            </p>
+            <p>
+                <strong>For dense prediction: no.</strong> Tasks like detection and segmentation require spatial information that a single [CLS] token cannot provide. Different models handle this differently:
+            </p>
+            <p>
+                <strong>CLIP</strong> uses only [CLS] (designed for classification and retrieval). <strong>SAM</strong> discards [CLS] and uses patch token dense features. <strong>DINOv2</strong> uses [CLS] for classification but patch tokens for dense tasks. This will be explored further in Week 6 (Detection + Segmentation).
+            </p>
+        </div>
+    </div>
+
+    <h3>2. Register Tokens</h3>
+
+    <div class="qa-block">
+        <div class="question">Q: What are register tokens and why are they needed?</div>
+        <div class="answer">
+            <p>
+                <strong>Vision Transformers Need Registers</strong> (Darcet et al., ICLR 2024) identified an artifact in ViTs like DINOv2 and CLIP: background patches with relatively low information content develop abnormally high norms. This happens because the model repurposes unused background patches as internal memory to store global information — essentially recycling low-information patches as scratch space.
+            </p>
+            <p>
+                This causes artifacts in attention map visualization and degrades dense prediction performance. The solution is to add a few (typically 4) learnable tokens — similar to [CLS] — that serve as dedicated global information storage. At inference, these register tokens are discarded; only [CLS] and patch tokens are used.
+            </p>
+            <p>
+                With registers, patch tokens can focus on their intended role (local feature encoding), producing cleaner attention maps and better dense prediction. DINOv2 provides separate model checkpoints with and without registers.
+            </p>
+        </div>
+    </div>
+
+    <h3>3. Combining [CLS] with GAP or Patch Tokens</h3>
+
+    <div class="qa-block">
+        <div class="question">Q: Can [CLS] and GAP (or patch tokens) be used together?</div>
+        <div class="answer">
+            <p>
+                <strong>Simple concatenation:</strong> Yes — concatenating [CLS] with GAP (or max pooling) of patch tokens is used in models like Sentence-BERT when you want both global and local information. This is a straightforward way to combine both signals.
+            </p>
+            <p>
+                <strong>Learnable pooling (MAP):</strong> Beyond simple GAP, <strong>Multihead Attention Pooling (MAP)</strong> uses a learnable query vector that performs cross-attention with all patch tokens. SigLIP/SigLIP 2 uses this approach (though the original SigLIP paper doesn't explicitly mention it, as it builds on the authors' prior work).
+            </p>
+            <p>
+                <strong>Late [CLS] injection (CaiT):</strong> <strong>CaiT</strong> (Touvron et al., 2021) identifies a problem with the standard ViT design: the same attention parameters must simultaneously handle two different jobs — modeling patch-to-patch relationships and aggregating classification information into [CLS]. CaiT separates these by running self-attention among patches only in early layers, then inserting [CLS] in the final 2 layers to read from the patch tokens via cross-attention.
+            </p>
+        </div>
+    </div>
+
+    <h3>4. Recent Research on [CLS]–Patch Token Interaction</h3>
+
+    <div class="qa-block">
+        <div class="question">Q: Are there recent works that further explore how [CLS] and patch tokens should interact?</div>
+        <div class="answer">
+            <p>
+                <strong>Revisiting [CLS] and Patch Token Interaction in Vision Transformers</strong> (Marouani et al., ICLR 2026) takes the CaiT insight further. Rather than only separating [CLS] injection temporally (early vs. late layers), this work separates the processing itself: LayerNorm, LayerScale, and QKV projections are given separate parameters for [CLS] and patch tokens in approximately the first third of the blocks.
+            </p>
+            <p>
+                Crucially, [CLS] and patch tokens still interact during the attention computation itself, so information exchange is preserved. But the pre- and post-processing around attention is fully decoupled. This recognizes that [CLS] (global summary) and patch tokens (local features) have fundamentally different roles and benefit from separate parameterization.
+            </p>
+        </div>
+    </div>
+
+    <!-- Further Reading -->
+    <h2>Further Reading</h2>
+
+    <h3>Course Notes & Lectures</h3>
+    <ul class="reading-list">
+        <li>
+            <span class="reading-tag tag-blog">Blog</span>
+            <a href="https://ai.googleblog.com/2020/12/transformers-for-image-recognition-at.html" target="_blank">Google AI Blog: ViT</a>
+            — Accessible overview of the Vision Transformer
+        </li>
+    </ul>
+
+    <h3>Key Papers</h3>
+    <ul class="reading-list">
+        <li>
+            <span class="reading-tag tag-paper">Paper</span>
+            <a href="https://arxiv.org/abs/2010.11929" target="_blank">An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale</a>
+            — Dosovitskiy et al. (ICLR 2021). The original ViT paper.
+        </li>
+        <li>
+            <span class="reading-tag tag-paper">Paper</span>
+            <a href="https://arxiv.org/abs/2012.12877" target="_blank">Training Data-Efficient Image Transformers (DeiT)</a>
+            — Touvron et al. (ICML 2021). Knowledge distillation for ViT.
+        </li>
+        <li>
+            <span class="reading-tag tag-paper">Paper</span>
+            <a href="https://arxiv.org/abs/2103.14030" target="_blank">Swin Transformer: Hierarchical Vision Transformer using Shifted Windows</a>
+            — Liu et al. (ICCV 2021).
+        </li>
+        <li>
+            <span class="reading-tag tag-paper">Paper</span>
+            <a href="https://arxiv.org/abs/2201.03545" target="_blank">A ConvNet for the 2020s (ConvNeXt)</a>
+            — Liu et al. (CVPR 2022). CNN redesigned with ViT principles.
+        </li>
+        <li>
+            <span class="reading-tag tag-paper">Paper</span>
+            <a href="https://arxiv.org/abs/2602.08071" target="_blank">ViT-5: Vision Transformers for The Mid-2020s</a>
+            — Meta (2026). Modern ViT design principles and best practices.
+        </li>
+    </ul>
+
+    <h3>Papers Discussed in Q&A</h3>
+    <ul class="reading-list">
+        <li>
+            <span class="reading-tag tag-paper">Paper</span>
+            <a href="https://arxiv.org/abs/2309.16588" target="_blank">Vision Transformers Need Registers</a>
+            — Darcet et al. (ICLR 2024). Identifies artifact tokens and proposes register tokens.
+        </li>
+        <li>
+            <span class="reading-tag tag-paper">Paper</span>
+            <a href="https://arxiv.org/abs/2103.17239" target="_blank">Going Deeper with Image Transformers (CaiT)</a>
+            — Touvron et al. (ICCV 2021). Late [CLS] injection for separating patch interaction and classification.
+        </li>
+        <li>
+            <span class="reading-tag tag-paper">Paper</span>
+            <a href="https://arxiv.org/abs/2602.08626" target="_blank">Revisiting [CLS] and Patch Token Interaction in Vision Transformers</a>
+            — Marouani et al. (ICLR 2026). Decoupled parameterization for [CLS] and patch tokens.
+        </li>
+    </ul>
+
+</div>
+
+<div class="footer">
+    &copy; 2026 Kihyun Na, Handong Global University. Course materials are provided for educational purposes.
+</div>
+
+</body>
+</html>

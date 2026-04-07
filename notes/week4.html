@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 4 Notes — From Sequence Modeling to Transformer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a3a5c;
+            --accent: #2c7be5;
+            --text: #2d3748;
+            --text-light: #718096;
+            --bg: #ffffff;
+            --bg-alt: #f7fafc;
+            --border: #e2e8f0;
+            --max-width: 900px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Sans 3', -apple-system, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem 2rem;
+        }
+
+        .header-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .header .back {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .header .back:hover { color: white; }
+
+        .header h1 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+
+        .header .subtitle {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            margin-top: 0.3rem;
+        }
+
+        .main {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h2 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1.35rem;
+            color: var(--primary);
+            margin-top: 2.5rem;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            font-size: 1.05rem;
+            color: var(--primary);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p { margin-bottom: 1rem; }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .qa-block {
+            background: var(--bg-alt);
+            border-left: 3px solid var(--accent);
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.2rem;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .qa-block .question {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .qa-block .answer {
+            color: var(--text);
+        }
+
+        .qa-block .answer p:last-child { margin-bottom: 0; }
+
+        .reading-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .reading-list li {
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+
+        .reading-list li:last-child { border-bottom: none; }
+
+        .reading-tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            padding: 0.1rem 0.4rem;
+            border-radius: 2px;
+            margin-right: 0.4rem;
+            vertical-align: middle;
+        }
+
+        .tag-paper {
+            background: #ebf5ff;
+            color: #2c7be5;
+        }
+
+        .tag-notes {
+            background: #e6f9ee;
+            color: #1a9d5c;
+        }
+
+        .tag-video {
+            background: #fef3e2;
+            color: #c87519;
+        }
+
+        .tag-blog {
+            background: #f0e6f6;
+            color: #7c3aed;
+        }
+
+        code {
+            background: var(--bg-alt);
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-inner">
+        <a class="back" href="index.html">← Back to Course</a>
+        <h1>Week 4: From Sequence Modeling to Transformer</h1>
+        <div class="subtitle">Lecture Notes, Q&A, and Further Reading</div>
+    </div>
+</div>
+
+<div class="main">
+
+    <!-- Lecture Overview -->
+    <h2>Lecture Overview</h2>
+    <p>
+        This lecture traces the evolution from RNNs to Transformers: sequence modeling with RNNs and LSTMs, the introduction of the attention mechanism, and how the Transformer architecture replaced recurrence with self-attention entirely.
+    </p>
+
+    <!-- Q&A from Lecture -->
+    <h2>Q&A from Lecture</h2>
+
+    <h3>Origin of Query, Key, Value Terminology</h3>
+
+    <div class="qa-block">
+        <div class="question">Q: Where did the terms Query, Key, and Value come from? Were they introduced in the Transformer paper?</div>
+        <div class="answer">
+            <p>
+                The terminology has roots in the Memory Network literature that predates the Transformer. The evolution went roughly: RNN (~1990) → Attention (Bahdanau et al., 2014) → Transformer (Vaswani et al., 2017), and several papers in between introduced these terms incrementally.
+            </p>
+            <p>
+                <strong>End-to-End Memory Networks</strong> (Sukhbaatar et al., 2015) introduced the term "query" in the context of QA tasks, where a question is used to address stored memories.
+            </p>
+            <p>
+                <strong>Key-Value Memory Networks</strong> (Miller et al., 2016) explicitly introduced "key addressing" and "value reading" — the idea that you use keys to determine where to look, and values to determine what to retrieve.
+            </p>
+            <p>
+                The <strong>Transformer</strong> (Vaswani et al., 2017) generalized this into the Q, K, V formulation we know today, defining attention as a general-purpose mechanism: <code>Attention(Q, K, V) = softmax(QKᵀ/√d)V</code>. Notably, the Transformer paper cites End-to-End Memory Networks but does not cite Key-Value Memory Networks, so whether the K/V terminology was a direct influence or an independent convergence remains unclear.
+            </p>
+        </div>
+    </div>
+
+    <h3>Why 224×224? The AlexNet Typo That Became a Standard</h3>
+
+    <div class="qa-block">
+        <div class="question">Q: Why do ImageNet models resize inputs to 224×224 (or sometimes 227×227)?</div>
+        <div class="answer">
+            <p>
+                This is one of the more entertaining pieces of deep learning history. The original AlexNet paper (Krizhevsky et al., 2012) states the input size as 224×224×3. However, AlexNet's first layer uses kernel=11, stride=4, no padding, which gives <code>(224 - 11) / 4 + 1 = 54.25</code> — this doesn't produce an integer, so 224 doesn't actually work.
+            </p>
+            <p>
+                The official implementation (in Caffe at the time) actually used <strong>227×227</strong>, which gives <code>(227 - 11) / 4 + 1 = 55</code>. So 224 in the paper was simply a typo.
+            </p>
+            <p>
+                Ironically, 224 turned out to be a <em>better</em> choice for later architectures. Since VGGNet and ResNet downsample by a factor of 2 repeatedly (via stride-2 conv or 2×2 pooling), 224 divides cleanly: 224 → 112 → 56 → 28 → 14 → 7. So VGGNet and ResNet adopted 224, and the typo became the standard.
+            </p>
+        </div>
+    </div>
+
+    <!-- Further Reading -->
+    <h2>Further Reading</h2>
+
+    <h3>Course Notes & Lectures</h3>
+    <ul class="reading-list">
+        <li>
+            <span class="reading-tag tag-video">Video</span>
+            <a href="https://www.youtube.com/watch?v=dUzLD91Sj-o&list=PL5-TkQAfAZFbzxjBHtzdVCWE0Zbhomg7r" target="_blank">Michigan EECS 498 L12: Recurrent Networks</a>
+            — RNN, LSTM, GRU, language modeling, image captioning
+        </li>
+        <li>
+            <span class="reading-tag tag-video">Video</span>
+            <a href="https://www.youtube.com/watch?v=YAgjfMR9R_M&list=PL5-TkQAfAZFbzxjBHtzdVCWE0Zbhomg7r" target="_blank">Michigan EECS 498 L13: Attention</a>
+            — Multimodal attention, self-attention, Transformers
+        </li>
+        <li>
+            <span class="reading-tag tag-blog">Blog</span>
+            <a href="http://jalammar.github.io/illustrated-transformer/" target="_blank">The Illustrated Transformer</a>
+            — Jay Alammar's visual guide to the Transformer architecture
+        </li>
+        <li>
+            <span class="reading-tag tag-blog">Blog</span>
+            <a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank">Understanding LSTM Networks</a>
+            — Chris Olah's classic visual explanation of LSTMs
+        </li>
+        <li>
+            <span class="reading-tag tag-blog">Blog</span>
+            <a href="http://www.peterbloem.nl/blog/transformers" target="_blank">Transformers from Scratch</a>
+            — Peter Bloem's detailed implementation walkthrough
+        </li>
+    </ul>
+
+    <h3>Key Papers</h3>
+    <ul class="reading-list">
+        <li>
+            <span class="reading-tag tag-paper">Paper</span>
+            <a href="https://arxiv.org/abs/1409.0473" target="_blank">Neural Machine Translation by Jointly Learning to Align and Translate</a>
+            — Bahdanau et al. (2014). The paper that introduced attention for sequence-to-sequence models.
+        </li>
+        <li>
+            <span class="reading-tag tag-paper">Paper</span>
+            <a href="https://arxiv.org/abs/1706.03762" target="_blank">Attention Is All You Need</a>
+            — Vaswani et al. (NeurIPS 2017). The Transformer paper.
+        </li>
+        <li>
+            <span class="reading-tag tag-paper">Paper</span>
+            <a href="https://arxiv.org/abs/1503.08895" target="_blank">End-To-End Memory Networks</a>
+            — Sukhbaatar et al. (NeurIPS 2015). Introduced "query" terminology for memory addressing.
+        </li>
+        <li>
+            <span class="reading-tag tag-paper">Paper</span>
+            <a href="https://arxiv.org/abs/1606.03126" target="_blank">Key-Value Memory Networks for Directly Reading Documents</a>
+            — Miller et al. (EMNLP 2016). Introduced key/value separation for memory access.
+        </li>
+    </ul>
+
+</div>
+
+<div class="footer">
+    &copy; 2026 Kihyun Na, Handong Global University. Course materials are provided for educational purposes.
+</div>
+
+</body>
+</html>
